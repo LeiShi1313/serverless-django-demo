@@ -148,24 +148,25 @@ SQLITE_BUCKET = "serverless-django-db"
 try:
     from .local_settings import *
 except ImportError:
-    logging.error("Unable to find local_settings.py")
+    logging.warning("Unable to find local_settings.py")
 
 # Are we running in Lambda environment ?
 # See https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html#lambda-environment-variables
-IS_OFFLINE = os.environ.get('LAMBDA_TASK_ROOT') is None
+# IS_OFFLINE = os.environ.get('LAMBDA_TASK_ROOT') is None
+# IS_OFFIINE = False
 # I hate different configuration for local and cloud, but this is what we have now.
-if IS_OFFLINE:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
+# if IS_OFFLINE:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': os.path.join(BASE_DIR, 'db.sqlite5'),
+#         }
+#     }
+# else:
+DATABASES = {
+    'default': {
+        'ENGINE': 'zappa_django_utils.db.backends.s3sqlite',
+        'NAME': 'sqlite.db',
+        'BUCKET': SQLITE_BUCKET
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'zappa_django_utils.db.backends.s3sqlite',
-            'NAME': 'sqlite.db',
-            'BUCKET': SQLITE_BUCKET
-        }
-    }
+}
