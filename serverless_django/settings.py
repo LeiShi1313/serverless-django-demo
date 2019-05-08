@@ -26,7 +26,13 @@ SECRET_KEY = 'c7i)i3b29)el++h0)2(-d690xz!y(&*h)vv=1vy66@9^*1m4a#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.execute-api.us-east-1.amazonaws.com']
+ALLOWED_HOSTS = [
+        '127.0.0.1',
+        '.amazonaws.com',
+        'localhost',
+        '.yepanata.com',
+        '.leishi.io',
+]
 
 # Application definition
 
@@ -132,12 +138,13 @@ REST_FRAMEWORK = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = '/dev/static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 WHITENOISE_STATIC_PREFIX = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-SQLITE_BUCKET = os.environ.get('SQLITE_BUCKET', "serverless-django")
+# SQLITE_BUCKET = os.environ.get('SQLITE_BUCKET', "serverless-django-db")
+SQLITE_BUCKET = "serverless-django-db"
 try:
     from .local_settings import *
 except ImportError:
@@ -146,7 +153,6 @@ except ImportError:
 # Are we running in Lambda environment ?
 # See https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html#lambda-environment-variables
 IS_OFFLINE = os.environ.get('LAMBDA_TASK_ROOT') is None
-
 # I hate different configuration for local and cloud, but this is what we have now.
 if IS_OFFLINE:
     DATABASES = {
